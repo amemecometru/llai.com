@@ -1,0 +1,6 @@
+name = "ll-com"
+compatibility_date = "2026-05-03"
+
+[pages]
+  build_command = "pnpm build"
+  dist_dir = "dist"
