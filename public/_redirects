@@ -1,0 +1,9 @@
+# Cloudflare Pages SPA fallback — required for client-side routing
+/*  /index.html  200
+
+# Legacy redirects from prior static build (in case anything is bookmarked)
+/terms.html /terms 301
+/privacy.html /privacy 301
+/refund.html /refund 301
+/contact.html /contact 301
+/security.html /security 301
