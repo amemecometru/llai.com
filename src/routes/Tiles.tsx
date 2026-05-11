@@ -1,243 +1,233 @@
 import { useState } from 'react';
-
-const tiles = [
-  { slug: 'inbox-triage', name: 'Inbox Triage', status: 'live', description: 'AI-powered email classification and actionable item surfacing.' },
-  { slug: 'standup-concierge', name: 'Standup Concierge', status: 'live', description: 'Automated standup summaries from Slack and GitHub activity.' },
-  { slug: 'pr-review-brief', name: 'PR Review Brief', status: 'live', description: 'Concise review briefs for pull requests with key insights.' },
-  { slug: 'calendar-choreographer', name: 'Calendar Choreographer', status: 'live', description: 'Smart calendar management with meeting briefs and prep.' },
-  { slug: 'knowledge-tender', name: 'Knowledge Tender', status: 'live', description: 'Notion-powered knowledge capture and synthesis.' },
-  { slug: 'revenue-pulse', name: 'Revenue Pulse', status: 'live', description: 'Stripe revenue metrics and subscription insights.' },
-  { slug: 'lead-warmer', name: 'Lead Warmer', status: 'live', description: 'LinkedIn lead enrichment and outreach automation.' },
-];
+import { tilesMetadata } from '../data/tiles-metadata';
 
 export default function Tiles() {
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
-  const [inputs, setInputs] = useState<Record<string, string>>({});
+  const [inputs, setInputs] = useState<Record<string, string | string[]>>({});
+  const [isRunning, setIsRunning] = useState(false);
 
-  const handleInputChange = (tileSlug: string, value: string) => {
-    setInputs(prev => ({ ...prev, [tileSlug]: value }));
+  const handleInputChange = (tileSlug: string, key: string, value: string | string[]) => {
+    setInputs(prev => ({
+      ...prev,
+      [`${tileSlug}:${key}`]: value,
+    }));
   };
 
+  const handleRun = async (tileSlug: string) => {
+    setIsRunning(true);
+    // TODO: Wire to backend Pay-Per-Result API
+    console.log('Running tile:', tileSlug, 'with inputs:', inputs);
+    // Simulate work
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsRunning(false);
+    alert('Workflow complete! (Check console for details)');
+  };
+
+  const selectedMetadata = tilesMetadata.find(t => t.slug === selectedTile);
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-cream via-cream to-blue-50 dark:from-dark-bg dark:via-dark-bg dark:to-dark-bg-2 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">LLai Tile Gallery</h1>
-          <p className="text-lg text-gray-600">Outcome-based AI services for your business.</p>
+          <h1 className="text-5xl font-bold text-ink dark:text-dark-ink mb-3">
+            AI Workflows for Google Workspace
+          </h1>
+          <p className="text-lg text-ink-soft dark:text-dark-ink-soft max-w-2xl mx-auto">
+            Pick a workflow. Define the outcome you need. Let AI handle the busywork. You get the results.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tiles.map((tile) => (
-            <div
+        {/* Tiles Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {tilesMetadata.map((tile) => (
+            <button
               key={tile.slug}
-              className="relative bg-white rounded-2xl shadow-sm border border-blue-200 hover:shadow-lg cursor-pointer transition-all"
               onClick={() => setSelectedTile(tile.slug)}
+              className={`group relative rounded-2xl border-2 transition-all duration-300 text-left overflow-hidden ${
+                selectedTile === tile.slug
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-lg'
+                  : 'border-blue-100 dark:border-dark-border bg-white dark:bg-dark-bg hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md dark:hover:bg-dark-bg-2'
+              }`}
             >
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{tile.name}</h3>
-                <p className="text-gray-600 text-sm mb-4">{tile.description}</p>
-                <button className="text-sm text-blue-600 font-medium hover:text-blue-700">
-                  Open Tile →
-                </button>
+                {/* Name + Emoji indicator */}
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-lg font-semibold text-ink dark:text-dark-ink">{tile.name}</h3>
+                  <span className="text-2xl opacity-60 group-hover:opacity-100 transition">✨</span>
+                </div>
+
+                {/* Tagline (the outcome) */}
+                <p className="text-sm font-medium text-blue-700 dark:text-blue-400 mb-2">
+                  {tile.tagline}
+                </p>
+
+                {/* Integrations */}
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {tile.integrations.map(int => (
+                    <span
+                      key={int.name}
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-xs font-medium text-blue-700 dark:text-blue-300"
+                    >
+                      <span>{int.emoji}</span>
+                      {int.name}
+                    </span>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <div className="mt-4 pt-4 border-t border-blue-100 dark:border-dark-border">
+                  <span className="text-sm text-blue-600 dark:text-blue-400 font-medium inline-flex items-center">
+                    {selectedTile === tile.slug ? 'Configured ✓' : 'Learn more →'}
+                  </span>
+                </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
-        {selectedTile && (
-          <div className="mt-12 bg-white rounded-2xl shadow-sm border border-blue-200 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {tiles.find(t => t.slug === selectedTile)?.name} - Action Panel
-            </h2>
-            <p className="text-gray-600 mb-6">This tile sells outcomes, not integrations.</p>
-            
-            <div className="space-y-4">
-              {/* Inbox Triage Inputs */}
-              {selectedTile === 'inbox-triage' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Time Window</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['inbox-triage'] || ''}
-                      onChange={(e) => handleInputChange('inbox-triage', e.target.value)}
-                    >
-                      <option value="">Select window...</option>
-                      <option value="24h">Last 24 hours</option>
-                      <option value="7d">Last 7 days</option>
-                      <option value="30d">Last 30 days</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Run Inbox Triage
-                  </button>
-                </>
-              )}
-
-              {/* Standup Concierge Inputs */}
-              {selectedTile === 'standup-concierge' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Slack Channel</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="#general"
-                      value={inputs['standup-channel'] || ''}
-                      onChange={(e) => handleInputChange('standup-channel', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">GitHub Repo</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="owner/repo"
-                      value={inputs['standup-repo'] || ''}
-                      onChange={(e) => handleInputChange('standup-repo', e.target.value)}
-                    />
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Generate Standup
-                  </button>
-                </>
-              )}
-
-              {/* PR Review Brief Inputs */}
-              {selectedTile === 'pr-review-brief' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">GitHub Repository</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="owner/repo"
-                      value={inputs['pr-repo'] || ''}
-                      onChange={(e) => handleInputChange('pr-repo', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">PR Number (optional)</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="Leave empty for all open PRs"
-                      value={inputs['pr-number'] || ''}
-                      onChange={(e) => handleInputChange('pr-number', e.target.value)}
-                    />
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Generate PR Brief
-                  </button>
-                </>
-              )}
-
-              {/* Calendar Choreographer Inputs */}
-              {selectedTile === 'calendar-choreographer' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Calendar</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['cal-calendar'] || ''}
-                      onChange={(e) => handleInputChange('cal-calendar', e.target.value)}
-                    >
-                      <option value="">Select calendar...</option>
-                      <option value="primary">Primary</option>
-                      <option value="work">Work</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['cal-range'] || ''}
-                      onChange={(e) => handleInputChange('cal-range', e.target.value)}
-                    >
-                      <option value="today">Today</option>
-                      <option value="tomorrow">Tomorrow</option>
-                      <option value="week">Next 7 days</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Generate Briefs
-                  </button>
-                </>
-              )}
-
-              {/* Knowledge Tender Inputs */}
-              {selectedTile === 'knowledge-tender' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Notion Database</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['know-db'] || ''}
-                      onChange={(e) => handleInputChange('know-db', e.target.value)}
-                    >
-                      <option value="">Select database...</option>
-                      <option value="docs">Documentation</option>
-                      <option value="wiki">Wiki</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Sync Knowledge
-                  </button>
-                </>
-              )}
-
-              {/* Revenue Pulse Inputs */}
-              {selectedTile === 'revenue-pulse' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['rev-type'] || ''}
-                      onChange={(e) => handleInputChange('rev-type', e.target.value)}
-                    >
-                      <option value="">Select report...</option>
-                      <option value="monthly">Monthly Summary</option>
-                      <option value="ytd">Year to Date</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    View Revenue
-                  </button>
-                </>
-              )}
-
-              {/* Lead Warmer Inputs */}
-              {selectedTile === 'lead-warmer' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">LinkedIn Profile URL</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="https://www.linkedin.com/in/..."
-                      value={inputs['lead-url'] || ''}
-                      onChange={(e) => handleInputChange('lead-url', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Outreach Template</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['lead-template'] || ''}
-                      onChange={(e) => handleInputChange('lead-template', e.target.value)}
-                    >
-                      <option value="">Select template...</option>
-                      <option value="intro">Introduction</option>
-                      <option value="followup">Follow Up</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Enrich & Draft
-                  </button>
-                </>
-              )}
+        {/* Action Panel */}
+        {selectedMetadata && (
+          <div className="bg-white dark:bg-dark-bg rounded-2xl border-2 border-blue-200 dark:border-blue-900 shadow-lg overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-900 dark:to-blue-800 px-8 py-8">
+              <h2 className="text-3xl font-bold text-white mb-2">{selectedMetadata.name}</h2>
+              <p className="text-blue-100 text-lg font-medium">{selectedMetadata.tagline}</p>
             </div>
+
+            <div className="p-8">
+              {/* What it does */}
+              <div className="mb-8">
+                <h3 className="text-sm font-semibold uppercase tracking-widest text-ink-soft dark:text-dark-ink-soft mb-2">
+                  What it does
+                </h3>
+                <p className="text-base text-ink dark:text-dark-ink leading-relaxed">
+                  {selectedMetadata.description}
+                </p>
+              </div>
+
+              {/* What you get */}
+              <div className="mb-8 p-4 rounded-lg bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-900">
+                <h3 className="text-sm font-semibold uppercase tracking-widest text-green-700 dark:text-green-400 mb-2">
+                  ✓ What you get
+                </h3>
+                <p className="text-base text-green-900 dark:text-green-300">
+                  {selectedMetadata.whatYouGet}
+                </p>
+              </div>
+
+              {/* Real example */}
+              <div className="mb-8 p-4 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-900">
+                <h3 className="text-sm font-semibold uppercase tracking-widest text-amber-700 dark:text-amber-400 mb-2">
+                  💡 Real-world example
+                </h3>
+                <p className="text-sm text-amber-900 dark:text-amber-300 leading-relaxed">
+                  {selectedMetadata.example}
+                </p>
+              </div>
+
+              {/* Transparency */}
+              <div className="mb-8 p-4 rounded-lg bg-slate-100 dark:bg-slate-900/30 border border-slate-300 dark:border-slate-700">
+                <h3 className="text-sm font-semibold uppercase tracking-widest text-slate-700 dark:text-slate-400 mb-2">
+                  🔒 Data transparency
+                </h3>
+                <p className="text-sm text-slate-700 dark:text-slate-400">
+                  {selectedMetadata.scopeWarning}
+                </p>
+              </div>
+
+              {/* Inputs */}
+              <div className="mb-8">
+                <h3 className="text-sm font-semibold uppercase tracking-widest text-ink-soft dark:text-dark-ink-soft mb-4">
+                  Configure your run
+                </h3>
+                <div className="space-y-4">
+                  {selectedMetadata.inputs.map(input => (
+                    <div key={input.key}>
+                      <label className="block text-sm font-medium text-ink dark:text-dark-ink mb-1">
+                        {input.label}
+                        {input.helpText && (
+                          <span className="block text-xs font-normal text-ink-soft dark:text-dark-ink-soft mt-1">
+                            {input.helpText}
+                          </span>
+                        )}
+                      </label>
+
+                      {input.type === 'select' && input.options && (
+                        <select
+                          className="w-full px-3 py-2 border border-blue-200 dark:border-dark-border rounded-lg text-sm bg-white dark:bg-dark-bg-2 text-ink dark:text-dark-ink focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                          value={String(inputs[`${selectedTile}:${input.key}`] || '')}
+                          onChange={e => handleInputChange(selectedTile, input.key, e.target.value)}
+                        >
+                          <option value="">Select an option...</option>
+                          {input.options.map(opt => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+
+                      {input.type === 'text' && (
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2 border border-blue-200 dark:border-dark-border rounded-lg text-sm bg-white dark:bg-dark-bg-2 text-ink dark:text-dark-ink focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                          placeholder={input.placeholder}
+                          value={String(inputs[`${selectedTile}:${input.key}`] || '')}
+                          onChange={e => handleInputChange(selectedTile, input.key, e.target.value)}
+                        />
+                      )}
+
+                      {input.type === 'textarea' && (
+                        <textarea
+                          className="w-full px-3 py-2 border border-blue-200 dark:border-dark-border rounded-lg text-sm bg-white dark:bg-dark-bg-2 text-ink dark:text-dark-ink focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 resize-none"
+                          placeholder={input.placeholder}
+                          rows={3}
+                          value={String(inputs[`${selectedTile}:${input.key}`] || '')}
+                          onChange={e => handleInputChange(selectedTile, input.key, e.target.value)}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Run button */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleRun(selectedTile)}
+                  disabled={isRunning}
+                  className="px-6 py-3 rounded-lg bg-blue-600 dark:bg-blue-700 text-white font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  {isRunning ? '⏳ Running...' : '▶ Run Workflow'}
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedTile(null);
+                    setInputs({});
+                  }}
+                  className="px-6 py-3 rounded-lg border border-blue-200 dark:border-dark-border text-ink dark:text-dark-ink hover:bg-blue-50 dark:hover:bg-dark-bg-2 transition-all"
+                >
+                  Clear
+                </button>
+              </div>
+
+              {/* Pricing hint */}
+              <div className="mt-8 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-900">
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                  💰 <span className="font-semibold">Pay-Per-Result pricing:</span> You only pay if the workflow completes successfully. See pricing page for details.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!selectedTile && (
+          <div className="text-center py-12">
+            <p className="text-lg text-ink-soft dark:text-dark-ink-soft">
+              👆 Pick a workflow above to get started.
+            </p>
           </div>
         )}
       </div>
