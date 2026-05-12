@@ -4,6 +4,7 @@ import { Client } from 'pg';
 import Anthropic from '@anthropic-ai/sdk';
 import { execSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import 'dotenv/config';
 
 const ORG_SLUG  = 'test-co';
@@ -42,21 +43,30 @@ async function main() {
   `, [ctx.org_id, ctx.user_id, ctx.tile_id])).rows[0];
 
   // 3. Fetch messages via Composio
-  const fetched = composio(`execute GMAIL_FETCH_MESSAGES -d '{"max_results":50,"connected_account_id":"ca_KPM8mp0z76U8"}'`);
-  const messages: any[] = fetched.data ?? [];
+  const result = JSON.parse(execSync(`composio execute GMAIL_FETCH_EMAILS -d '{"max_results":50,"ids_only":false}'`, { encoding: 'utf8' }));
+  const outputPath = result.outputFilePath;
+  const fetched = JSON.parse(readFileSync(outputPath, 'utf8'));
+  const messages: any[] = fetched.data?.messages ?? [];
 
   // 4. Log raw event for every message scanned
   for (const m of messages) {
+    const headers = m.payload?.headers ?? [];
+    const subject = headers.find((h: any) => h.name === 'Subject')?.value ?? '';
     await pg.query(
       `INSERT INTO usage_events (org_id, tile_run_id, event_type, payload)
        VALUES ($1, $2, 'email_scanned', $3)`,
-      [ctx.org_id, run.id, { gmail_id: m.id, subject: m.subject ?? null }]
+      [ctx.org_id, run.id, { gmail_id: m.id, subject }]
     );
   }
 
   // 5. Classify each message; mint outcomes for actionables
   for (const m of messages) {
-    const verdict = await classify(m);
+    const headers = m.payload?.headers ?? [];
+    const subject = headers.find((h: any) => h.name === 'Subject')?.value ?? '';
+    const from = headers.find((h: any) => h.name === 'From')?.value ?? '';
+    const snippet = m.snippet ?? '';
+    
+    const verdict = await classify({ subject, from, snippet });
     if (verdict.label !== 'actionable') {
       await pg.query(
         `INSERT INTO usage_events (org_id, tile_run_id, event_type, payload)
@@ -90,7 +100,7 @@ async function main() {
     `, [
       ctx.org_id, run.id, ctx.tile_id, ctx.stripe_meter_id_actionable,
       ctx.stripe_customer_id, identifier, sourceIds,
-      { gmail_id: m.id, subject: m.subject ?? null }
+      { gmail_id: m.id, subject }
     ]);
     await pg.query('COMMIT');
   }
@@ -104,7 +114,7 @@ async function main() {
   await pg.end();
 }
 
-async function classify(msg: any): Promise<{ label: string; reason: string }> {
+async function classify(msg: { subject: string; from: string; snippet: string }): Promise<{ label: string; reason: string }> {
   const r = await claude.messages.create({
     model: 'claude-sonnet-4-5',
     max_tokens: 200,
@@ -112,8 +122,8 @@ async function classify(msg: any): Promise<{ label: string; reason: string }> {
       role: 'user',
       content: `Classify this email as one of: actionable | newsletter | archive.\n` +
                `Reply ONLY as JSON: {"label":"...","reason":"..."}\n\n` +
-               `Subject: ${msg.subject ?? ''}\nFrom: ${msg.from ?? ''}\n` +
-               `Snippet: ${(msg.snippet ?? '').slice(0, 500)}`
+               `Subject: ${msg.subject}\nFrom: ${msg.from}\n` +
+               `Snippet: ${msg.snippet.slice(0, 500)}`
     }]
   });
   try {

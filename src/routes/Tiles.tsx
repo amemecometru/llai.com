@@ -1,243 +1,215 @@
 import { useState } from 'react';
-
-const tiles = [
-  { slug: 'inbox-triage', name: 'Inbox Triage', status: 'live', description: 'AI-powered email classification and actionable item surfacing.' },
-  { slug: 'standup-concierge', name: 'Standup Concierge', status: 'live', description: 'Automated standup summaries from Slack and GitHub activity.' },
-  { slug: 'pr-review-brief', name: 'PR Review Brief', status: 'live', description: 'Concise review briefs for pull requests with key insights.' },
-  { slug: 'calendar-choreographer', name: 'Calendar Choreographer', status: 'live', description: 'Smart calendar management with meeting briefs and prep.' },
-  { slug: 'knowledge-tender', name: 'Knowledge Tender', status: 'live', description: 'Notion-powered knowledge capture and synthesis.' },
-  { slug: 'revenue-pulse', name: 'Revenue Pulse', status: 'live', description: 'Stripe revenue metrics and subscription insights.' },
-  { slug: 'lead-warmer', name: 'Lead Warmer', status: 'live', description: 'LinkedIn lead enrichment and outreach automation.' },
-];
+import { Link } from 'react-router-dom';
+import { tilesMetadata } from '../data/tiles-metadata';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Tiles() {
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
-  const [inputs, setInputs] = useState<Record<string, string>>({});
+  const [inputs, setInputs] = useState<Record<string, string | string[]>>({});
 
-  const handleInputChange = (tileSlug: string, value: string) => {
-    setInputs(prev => ({ ...prev, [tileSlug]: value }));
+  const handleInputChange = (tileSlug: string, key: string, value: string | string[]) => {
+    setInputs(prev => ({
+      ...prev,
+      [`${tileSlug}:${key}`]: value,
+    }));
   };
 
+  const selectedMetadata = tilesMetadata.find(t => t.slug === selectedTile);
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-cream via-cream to-primary-soft/30 dark:from-ink dark:via-surface dark:to-surface-container py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">LLai Tile Gallery</h1>
-          <p className="text-lg text-gray-600">Outcome-based AI services for your business.</p>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 dark:bg-primary/20 mb-6">
+            <span className="text-label-sm font-semibold text-primary-deep dark:text-primary-soft">✨ AI WORKFLOWS FOR GOOGLE WORKSPACE</span>
+          </div>
+          <h1 className="font-display text-display-lg text-ink dark:text-on-surface mb-3">
+            Workflows that work while you sleep.
+          </h1>
+          <p className="text-body-lg text-ink-soft dark:text-on-surface-variant max-w-2xl mx-auto">
+            Pick a workflow. Connect your Google account. Get results. Pay only when a workflow delivers — no subscriptions, no commitments.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tiles.map((tile) => (
-            <div
-              key={tile.slug}
-              className="relative bg-white rounded-2xl shadow-sm border border-blue-200 hover:shadow-lg cursor-pointer transition-all"
-              onClick={() => setSelectedTile(tile.slug)}
-            >
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{tile.name}</h3>
-                <p className="text-gray-600 text-sm mb-4">{tile.description}</p>
-                <button className="text-sm text-blue-600 font-medium hover:text-blue-700">
-                  Open Tile →
-                </button>
+        {/* Tiles Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {tilesMetadata.map((tile) => {
+            const isActionable = selectedTile === tile.slug;
+            const isInboxTriage = tile.slug === 'inbox-triage';
+
+            return (
+              <div
+                key={tile.slug}
+                className={`group relative rounded-2xl border-2 transition-all duration-300 ${
+                  isActionable
+                    ? 'border-primary/50 dark:border-primary/30 bg-cream-elev dark:bg-surface-container shadow-lg shadow-primary/5'
+                    : 'border-border dark:border-surface-container-high bg-cream-elev/80 dark:bg-surface-container-low hover:border-primary/30 dark:hover:border-primary/20 hover:shadow-md'
+                }`}
+              >
+                <div className="p-6">
+                  {/* Name + Emoji indicator */}
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="font-display text-lg font-semibold text-ink dark:text-on-surface">{tile.name}</h3>
+                    <span className="text-2xl opacity-60 group-hover:opacity-100 transition">✨</span>
+                  </div>
+
+                  {/* Tagline (the outcome) */}
+                  <p className="text-body-sm font-medium text-primary-deep dark:text-primary-soft mb-3">
+                    {tile.tagline}
+                  </p>
+
+                  {/* Real-world example */}
+                  <div className="mb-4 p-3 rounded-lg bg-cream-veil dark:bg-surface-container-low">
+                    <p className="text-body-xs text-ink-muted dark:text-on-surface-variant italic leading-relaxed">
+                      &ldquo;{tile.example}&rdquo;
+                    </p>
+                  </div>
+
+                  {/* Integrations */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {tile.integrations.map(int => (
+                      <span
+                        key={int.name}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary/10 dark:bg-primary/15 text-body-xs font-medium text-ink-soft dark:text-on-surface-variant"
+                      >
+                        <span>{int.emoji}</span>
+                        {int.name}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Price */}
+                  <div className="mb-4 pt-3 border-t border-border dark:border-surface-container-high">
+                    <div className="flex justify-between items-center">
+                      <span className="text-body-sm text-ink-muted dark:text-on-surface-variant">Per successful run</span>
+                      <span className="font-display text-headline-sm font-bold text-ink dark:text-on-surface">
+                        ${((tile as any).priceCents ?? 499) / 100}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  {isInboxTriage ? (
+                    <Link
+                      to="/triage"
+                      className="w-full block text-center py-3 rounded-xl bg-primary text-on-primary font-display font-semibold hover:brightness-110 active:scale-[0.98] transition-all shadow-sm shadow-primary/20"
+                    >
+                      Run Inbox Triage →
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        if (isActionable) {
+                          setSelectedTile(null);
+                          setInputs({});
+                        } else {
+                          setSelectedTile(tile.slug);
+                        }
+                      }}
+                      className="w-full py-3 rounded-xl bg-primary text-on-primary font-display font-semibold hover:brightness-110 active:scale-[0.98] transition-all shadow-sm shadow-primary/20"
+                    >
+                      {isActionable ? 'Hide Details ↑' : 'Run This Workflow →'}
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Action Panel for non-triage tiles */}
+        {selectedMetadata && selectedMetadata.slug !== 'inbox-triage' && (
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-cream-elev dark:bg-surface-container rounded-2xl border-2 border-primary/30 dark:border-primary/20 shadow-lg overflow-hidden"
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-primary to-primary-deep px-8 py-8">
+              <h2 className="font-display text-3xl font-bold text-on-primary mb-2">{selectedMetadata.name}</h2>
+              <p className="text-on-primary/80 text-lg font-medium">{selectedMetadata.tagline}</p>
+            </div>
+
+            <div className="p-8 space-y-8">
+              {/* What you get */}
+              <div>
+                <h3 className="text-label-sm text-ink-muted dark:text-on-surface-variant mb-2">What you get</h3>
+                <p className="text-body-md text-ink dark:text-on-surface leading-relaxed">{selectedMetadata.whatYouGet}</p>
+              </div>
+
+              {/* What it does */}
+              <div>
+                <h3 className="text-label-sm text-ink-muted dark:text-on-surface-variant mb-2">How it works</h3>
+                <p className="text-body-md text-ink dark:text-on-surface leading-relaxed">{selectedMetadata.description}</p>
+              </div>
+
+              {/* Inputs */}
+              <div className="space-y-4">
+                <h3 className="text-label-sm text-ink-muted dark:text-on-surface-variant">Configure your run</h3>
+                {selectedMetadata.inputs.map(input => (
+                  <div key={input.key}>
+                    <label className="block text-body-sm font-medium text-ink dark:text-on-surface mb-1">
+                      {input.label}
+                      {input.helpText && (
+                        <span className="block text-body-xs font-normal text-ink-muted dark:text-on-surface-variant mt-0.5">
+                          {input.helpText}
+                        </span>
+                      )}
+                    </label>
+
+                    {input.type === 'select' && input.options && (
+                      <select
+                        className="w-full px-4 py-3 rounded-xl border border-border dark:border-surface-container-high bg-cream-veil dark:bg-surface-container-low text-ink dark:text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition"
+                        value={String(inputs[`${selectedTile}:${input.key}`] || '')}
+                        onChange={e => handleInputChange(selectedTile, input.key, e.target.value)}
+                      >
+                        <option value="">Select an option...</option>
+                        {input.options.map(opt => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    )}
+
+                    {input.type === 'text' && (
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 rounded-xl border border-border dark:border-surface-container-high bg-cream-veil dark:bg-surface-container-low text-ink dark:text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition placeholder:text-ink-muted/50"
+                        placeholder={input.placeholder}
+                        value={String(inputs[`${selectedTile}:${input.key}`] || '')}
+                        onChange={e => handleInputChange(selectedTile, input.key, e.target.value)}
+                      />
+                    )}
+
+                    {input.type === 'textarea' && (
+                      <textarea
+                        className="w-full px-4 py-3 rounded-xl border border-border dark:border-surface-container-high bg-cream-veil dark:bg-surface-container-low text-ink dark:text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition resize-none placeholder:text-ink-muted/50"
+                        placeholder={input.placeholder}
+                        rows={3}
+                        value={String(inputs[`${selectedTile}:${input.key}`] || '')}
+                        onChange={e => handleInputChange(selectedTile, input.key, e.target.value)}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Pricing hint */}
+              <div className="rounded-xl bg-primary/10 dark:bg-primary/5 border border-primary/20 p-4">
+                <p className="text-body-sm text-ink-soft dark:text-on-surface-variant">
+                  💰 <span className="font-semibold text-ink dark:text-on-surface">Pay-Per-Result pricing:</span> You only pay if the workflow completes successfully. ${((selectedMetadata as any).priceCents ?? 499) / 100} per successful run.
+                </p>
               </div>
             </div>
-          ))}
-        </div>
+          </motion.div>
+        )}
 
-        {selectedTile && (
-          <div className="mt-12 bg-white rounded-2xl shadow-sm border border-blue-200 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {tiles.find(t => t.slug === selectedTile)?.name} - Action Panel
-            </h2>
-            <p className="text-gray-600 mb-6">This tile sells outcomes, not integrations.</p>
-            
-            <div className="space-y-4">
-              {/* Inbox Triage Inputs */}
-              {selectedTile === 'inbox-triage' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Time Window</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['inbox-triage'] || ''}
-                      onChange={(e) => handleInputChange('inbox-triage', e.target.value)}
-                    >
-                      <option value="">Select window...</option>
-                      <option value="24h">Last 24 hours</option>
-                      <option value="7d">Last 7 days</option>
-                      <option value="30d">Last 30 days</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Run Inbox Triage
-                  </button>
-                </>
-              )}
-
-              {/* Standup Concierge Inputs */}
-              {selectedTile === 'standup-concierge' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Slack Channel</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="#general"
-                      value={inputs['standup-channel'] || ''}
-                      onChange={(e) => handleInputChange('standup-channel', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">GitHub Repo</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="owner/repo"
-                      value={inputs['standup-repo'] || ''}
-                      onChange={(e) => handleInputChange('standup-repo', e.target.value)}
-                    />
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Generate Standup
-                  </button>
-                </>
-              )}
-
-              {/* PR Review Brief Inputs */}
-              {selectedTile === 'pr-review-brief' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">GitHub Repository</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="owner/repo"
-                      value={inputs['pr-repo'] || ''}
-                      onChange={(e) => handleInputChange('pr-repo', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">PR Number (optional)</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="Leave empty for all open PRs"
-                      value={inputs['pr-number'] || ''}
-                      onChange={(e) => handleInputChange('pr-number', e.target.value)}
-                    />
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Generate PR Brief
-                  </button>
-                </>
-              )}
-
-              {/* Calendar Choreographer Inputs */}
-              {selectedTile === 'calendar-choreographer' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Calendar</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['cal-calendar'] || ''}
-                      onChange={(e) => handleInputChange('cal-calendar', e.target.value)}
-                    >
-                      <option value="">Select calendar...</option>
-                      <option value="primary">Primary</option>
-                      <option value="work">Work</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['cal-range'] || ''}
-                      onChange={(e) => handleInputChange('cal-range', e.target.value)}
-                    >
-                      <option value="today">Today</option>
-                      <option value="tomorrow">Tomorrow</option>
-                      <option value="week">Next 7 days</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Generate Briefs
-                  </button>
-                </>
-              )}
-
-              {/* Knowledge Tender Inputs */}
-              {selectedTile === 'knowledge-tender' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Notion Database</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['know-db'] || ''}
-                      onChange={(e) => handleInputChange('know-db', e.target.value)}
-                    >
-                      <option value="">Select database...</option>
-                      <option value="docs">Documentation</option>
-                      <option value="wiki">Wiki</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Sync Knowledge
-                  </button>
-                </>
-              )}
-
-              {/* Revenue Pulse Inputs */}
-              {selectedTile === 'revenue-pulse' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['rev-type'] || ''}
-                      onChange={(e) => handleInputChange('rev-type', e.target.value)}
-                    >
-                      <option value="">Select report...</option>
-                      <option value="monthly">Monthly Summary</option>
-                      <option value="ytd">Year to Date</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    View Revenue
-                  </button>
-                </>
-              )}
-
-              {/* Lead Warmer Inputs */}
-              {selectedTile === 'lead-warmer' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">LinkedIn Profile URL</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      placeholder="https://www.linkedin.com/in/..."
-                      value={inputs['lead-url'] || ''}
-                      onChange={(e) => handleInputChange('lead-url', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Outreach Template</label>
-                    <select 
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      value={inputs['lead-template'] || ''}
-                      onChange={(e) => handleInputChange('lead-template', e.target.value)}
-                    >
-                      <option value="">Select template...</option>
-                      <option value="intro">Introduction</option>
-                      <option value="followup">Follow Up</option>
-                    </select>
-                  </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                    Enrich & Draft
-                  </button>
-                </>
-              )}
-            </div>
+        {/* Empty state */}
+        {!selectedTile && (
+          <div className="text-center py-8">
+            <p className="text-body-lg text-ink-muted dark:text-on-surface-variant">
+              👆 Pick a workflow above and run it in seconds.
+            </p>
           </div>
         )}
       </div>

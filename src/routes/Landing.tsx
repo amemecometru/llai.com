@@ -3,13 +3,6 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { workflows, tiers, faqs, HERO_IMAGE, brand } from '../data/content';
 import SentinelShowcase from '../components/SentinelShowcase';
 
-// Inside your Landing return:
-<main>
-  <Hero />
-  <SentinelShowcase />
-  <Pricing />
-</main>
-
 /* ---------- HERO (full-bleed, no card) ---------- */
 function Hero() {
   const ref = useRef<HTMLElement>(null);

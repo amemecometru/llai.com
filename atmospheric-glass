@@ -1,0 +1,621 @@
+---
+name: Atmospheric Glass
+colors:
+  surface: "#0b1326"
+  surface-dim: "#0b1326"
+  surface-bright: "#31394d"
+  surface-container-lowest: "#060e20"
+  surface-container-low: "#131b2e"
+  surface-container: "#171f33"
+  surface-container-high: "#222a3d"
+  surface-container-highest: "#2d3449"
+  on-surface: "#dae2fd"
+  on-surface-variant: "#c4c7c8"
+  inverse-surface: "#dae2fd"
+  inverse-on-surface: "#283044"
+  outline: "#8e9192"
+  outline-variant: "#444748"
+  surface-tint: "#c6c6c7"
+  primary: "#ffffff"
+  on-primary: "#2f3131"
+  primary-container: "#e2e2e2"
+  on-primary-container: "#636565"
+  inverse-primary: "#5d5f5f"
+  secondary: "#adc9eb"
+  on-secondary: "#14324e"
+  secondary-container: "#304b68"
+  on-secondary-container: "#9fbbdd"
+  tertiary: "#ffffff"
+  on-tertiary: "#620040"
+  tertiary-container: "#ffd8e7"
+  on-tertiary-container: "#ab3779"
+  error: "#ffb4ab"
+  on-error: "#690005"
+  error-container: "#93000a"
+  on-error-container: "#ffdad6"
+  primary-fixed: "#e2e2e2"
+  primary-fixed-dim: "#c6c6c7"
+  on-primary-fixed: "#1a1c1c"
+  on-primary-fixed-variant: "#454747"
+  secondary-fixed: "#d0e4ff"
+  secondary-fixed-dim: "#adc9eb"
+  on-secondary-fixed: "#001d35"
+  on-secondary-fixed-variant: "#2d4965"
+  tertiary-fixed: "#ffd8e7"
+  tertiary-fixed-dim: "#ffafd3"
+  on-tertiary-fixed: "#3d0026"
+  on-tertiary-fixed-variant: "#85145a"
+  background: "#0b1326"
+  on-background: "#dae2fd"
+  surface-variant: "#2d3449"
+typography:
+  display-lg:
+    fontFamily: Inter
+    fontSize: 84px
+    fontWeight: "700"
+    lineHeight: 90px
+    letterSpacing: -0.04em
+  headline-lg:
+    fontFamily: Inter
+    fontSize: 32px
+    fontWeight: "600"
+    lineHeight: 40px
+    letterSpacing: -0.02em
+  headline-md:
+    fontFamily: Inter
+    fontSize: 24px
+    fontWeight: "500"
+    lineHeight: 32px
+  body-lg:
+    fontFamily: Inter
+    fontSize: 18px
+    fontWeight: "400"
+    lineHeight: 28px
+  body-md:
+    fontFamily: Inter
+    fontSize: 16px
+    fontWeight: "400"
+    lineHeight: 24px
+  label-sm:
+    fontFamily: Inter
+    fontSize: 12px
+    fontWeight: "600"
+    lineHeight: 16px
+    letterSpacing: 0.05em
+rounded:
+  sm: 0.25rem
+  DEFAULT: 0.5rem
+  md: 0.75rem
+  lg: 1rem
+  xl: 1.5rem
+  full: 9999px
+spacing:
+  unit: 8px
+  container-padding: 24px
+  card-gap: 16px
+  section-margin: 40px
+  glass-padding: 20px
+components:
+  glass-card-standard:
+    backgroundColor: rgba(255, 255, 255, 0.1)
+    textColor: "{colors.primary}"
+    rounded: "{rounded.lg}"
+    padding: "{spacing.glass-padding}"
+  glass-card-elevated:
+    backgroundColor: rgba(255, 255, 255, 0.2)
+    textColor: "{colors.primary}"
+    rounded: "{rounded.xl}"
+    padding: "{spacing.glass-padding}"
+  button-primary:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.label-sm}"
+    rounded: "{rounded.xl}"
+    height: 48px
+    padding: 0 24px
+  button-primary-hover:
+    backgroundColor: "{colors.primary-fixed-dim}"
+  button-ghost:
+    backgroundColor: rgba(255, 255, 255, 0.05)
+    textColor: "{colors.primary}"
+    typography: "{typography.label-sm}"
+    rounded: "{rounded.xl}"
+  input-field:
+    backgroundColor: rgba(255, 255, 255, 0.1)
+    textColor: "{colors.primary}"
+    typography: "{typography.body-md}"
+    rounded: "{rounded.xl}"
+    padding: 20px
+    height: 48px
+  weather-display-large:
+    textColor: "{colors.primary}"
+    typography: "{typography.display-lg}"
+  metric-label:
+    textColor: "{colors.on-surface-variant}"
+    typography: "{typography.label-sm}"
+  list-item-interactive:
+    backgroundColor: transparent
+    rounded: "{rounded.md}"
+    padding: 12px
+  list-item-interactive-hover:
+    backgroundColor: rgba(255, 255, 255, 0.1)
+---
+
+## Brand & Style
+
+This design system centers on a high-fidelity Glassmorphism aesthetic designed to evoke a sense of clarity, depth, and modern sophistication. The brand personality is ethereal yet functional, transforming complex meteorological data into a serene visual experience.
+
+The UI relies on a "vibrant-minimalist" approach: the background provides the energy through multi-colored abstract gradients (pinks, purples, and blues), while the interface elements act as frosted crystalline lenses that focus the user's attention. The emotional response is intended to be calm and premium, utilizing transparency and blur to simulate physical layers of glass floating in a fluid, digital space.
+
+## Colors
+
+The color strategy prioritizes luminosity and contrast. Because the background is a vibrant, multi-colored abstract composition, the UI components utilize a monochromatic white palette with varying alpha channels to maintain legibility.
+
+- **Primary Canvas:** A multi-stop linear or radial gradient background featuring Deep Blue (#1E3A8A), Vivid Purple (#7E22CE), and Soft Pink (#DB2777).
+- **Surface Alpha:** Component backgrounds are never solid. They range from `rgba(255, 255, 255, 0.1)` for secondary depth to `0.2` for primary interaction areas.
+- **Accents:** Semantic colors for weather conditions (e.g., Warning Yellow, Rain Blue) should be applied with high saturation but low opacity fills to maintain the glass effect.
+- **Text:** Strictly white (#FFFFFF) or high-tint silver (#E2E8F0) to ensure WCAG compliance against the vibrant background.
+
+## Typography
+
+The design system utilizes **Inter** for its neutral, geometric clarity which balances the organic nature of the blurred backgrounds.
+
+- **Hierarchy:** Large display sizes are used for temperature readings to create a clear focal point.
+- **Legibility:** On frosted glass, font weight is increased by one tier (e.g., using Medium instead of Regular) to counteract the visual noise of the background blur.
+- **Treatment:** Subtle text-shadows (`0px 2px 4px rgba(0,0,0,0.15)`) may be applied to small labels to ensure they "pop" against lighter areas of the background gradient.
+
+## Layout & Spacing
+
+The layout follows a fluid, contextual model. Elements are grouped into "Glass Containers" that float within the safe areas of the viewport.
+
+- **Rhythm:** An 8px base grid governs all dimensions.
+- **Grouping:** Related weather metrics (humidity, wind, UV index) are housed in a CSS grid or flex layout with 16px gaps.
+- **Negative Space:** Generous outer margins (24px+) are maintained to ensure the vibrant background is visible, reinforcing the "floating" nature of the interface.
+
+## Elevation & Depth
+
+Depth in this design system is not achieved through darkness, but through the physics of light and refraction.
+
+- **The Glass Stack:**
+  - **Level 1 (Base):** Dynamic background gradient with a slight grain texture.
+  - **Level 2 (Standard Card):** `backdrop-filter: blur(20px)`, `background: rgba(255, 255, 255, 0.1)`.
+  - **Level 3 (Elevated/Modals):** `backdrop-filter: blur(40px)`, `background: rgba(255, 255, 255, 0.2)`.
+- **Edge Definition:** Every glass surface must have a 1px solid border at `rgba(255, 255, 255, 0.2)`. A secondary inner "shine" border (top and left only) can be used to simulate a light source.
+- **Shadows:** Use extremely soft, spread-out shadows (`box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1)`) to separate the glass layers from the background without making the UI feel "heavy."
+
+## Shapes
+
+The shape language is organic and approachable. This design system uses "Rounded" (Level 2) settings to complement the fluid nature of the background.
+
+- **Cards:** Use `1rem` (16px) for standard weather cards.
+- **Action Elements:** Buttons and search bars use `rounded-xl` (1.5rem / 24px) to create a soft, tactile feel.
+- **Icons:** Weather iconography should be line-based with rounded caps (2px stroke width) to match the border weights of the containers.
+
+## Components
+
+### Glass Containers
+
+Standard cards use a 20px blur for general metrics, while elevated cards (modals or focal points) use 40px blur and higher opacity to sit physically higher in the stack. All glass elements must feature a 1px white border to simulate light refraction on the edges.
+
+### Action Elements
+
+Buttons use the `rounded-xl` setting to maintain a soft, organic feel. Primary buttons are solid white for maximum contrast, while ghost buttons utilize backdrop filters to remain integrated with the atmospheric background.
+
+### Inputs & Interaction
+
+Interactive list items and text inputs use subtle hover states and light blurs rather than solid color changes, preserving the "crystalline" transparency of the UI.
+
+### Typography Application
+
+Large weather displays utilize subtle text shadows to maintain legibility against the unpredictable colors of the background gradient. Metric labels should remain secondary in hierarchy using the silver-tinted `on-surface-variant` color.
+
+
+XXXXXXXXXXXXX----<>----WWWWWWWWWWWWWW README.md OOOOOOOOOOOO---*---<>---*---<>WWWWWW---* README.mdWWWWWWWWWWWOOOOOOOOOOOOOOOO
+
+examples/atmospheric-glass/README.md
+@@ -0,0 +1,11 @@# Atmospheric GlassA glassmorphism-driven weather application design system. Frosted crystalline panels float over vibrant gradient backgrounds, transforming complex meteorological data into a serene, premium visual experience. Uses a monochromatic white palette with varying alpha channels for luminosity and depth.## Files| File | Description ||------|-------------|| `DESIGN.md` | The complete design system specification in DESIGN.md format, including both structured YAML design tokens (frontmatter) and human-readable style guidance (markdown body). || `tailwind.config.js` | A Tailwind CSS v3 theme configuration derived from the design tokens in the DESIGN.md frontmatter. Covers colors, typography, border-radius, and spacing. Component tokens are intentionally excluded — Tailwind's utility-first approach handles component styling through composition of these primitives. || `design_tokens.json` | A [Design Tokens Community Group](https://www.designtokens.org/) JSON file containing all design tokens from the DESIGN.md frontmatter, including component-level tokens. This format is interoperable with tools like Figma, Style Dictionary, and other token pipelines. |
+Collapse file‎examples/atmospheric-glass/design_tokens.json‎Copy file name to clipboardExpand all lines: examples/atmospheric-glass/design_tokens.json+909Lines changed: 909 additions & 0 deletions Load DiffLarge diffs are not rendered by default.
+Collapse file‎examples/atmospheric-glass/tailwind.config.js‎Copy file name to clipboard+127Lines changed: 127 additions & 0 deletionsOriginal file line numberDiff line numberDiff line change@@ -0,0 +1,127 @@/** @type {import('tailwindcss').Config} */module.exports = {  darkMode: "class",  theme: {    extend: {      colors: {        "surface": "#0b1326",        "surface-dim": "#0b1326",        "surface-bright": "#31394d",        "surface-container-lowest": "#060e20",        "surface-container-low": "#131b2e",        "surface-container": "#171f33",        "surface-container-high": "#222a3d",        "surface-container-highest": "#2d3449",        "on-surface": "#dae2fd",        "on-surface-variant": "#c4c7c8",        "inverse-surface": "#dae2fd",        "inverse-on-surface": "#283044",        "outline": "#8e9192",        "outline-variant": "#444748",        "surface-tint": "#c6c6c7",        "primary": "#ffffff",        "on-primary": "#2f3131",        "primary-container": "#e2e2e2",        "on-primary-container": "#636565",        "inverse-primary": "#5d5f5f",        "secondary": "#adc9eb",        "on-secondary": "#14324e",        "secondary-container": "#304b68",        "on-secondary-container": "#9fbbdd",        "tertiary": "#ffffff",        "on-tertiary": "#620040",        "tertiary-container": "#ffd8e7",        "on-tertiary-container": "#ab3779",        "error": "#ffb4ab",        "on-error": "#690005",        "error-container": "#93000a",        "on-error-container": "#ffdad6",        "primary-fixed": "#e2e2e2",        "primary-fixed-dim": "#c6c6c7",        "on-primary-fixed": "#1a1c1c",        "on-primary-fixed-variant": "#454747",        "secondary-fixed": "#d0e4ff",        "secondary-fixed-dim": "#adc9eb",        "on-secondary-fixed": "#001d35",        "on-secondary-fixed-variant": "#2d4965",        "tertiary-fixed": "#ffd8e7",        "tertiary-fixed-dim": "#ffafd3",        "on-tertiary-fixed": "#3d0026",        "on-tertiary-fixed-variant": "#85145a",        "background": "#0b1326",        "on-background": "#dae2fd",        "surface-variant": "#2d3449",      },      fontFamily: {        "display-lg": ["Inter"],        "headline-lg": ["Inter"],        "headline-md": ["Inter"],        "body-lg": ["Inter"],        "body-md": ["Inter"],        "label-sm": ["Inter"],      },      fontSize: {        "display-lg": [          "84px",          {            lineHeight: "90px",            letterSpacing: "-0.04em",            fontWeight: "700",          },        ],        "headline-lg": [          "32px",          {            lineHeight: "40px",            letterSpacing: "-0.02em",            fontWeight: "600",          },        ],        "headline-md": [          "24px",          {            lineHeight: "32px",            fontWeight: "500",          },        ],        "body-lg": [          "18px",          {            lineHeight: "28px",            fontWeight: "400",          },        ],        "body-md": [          "16px",          {            lineHeight: "24px",            fontWeight: "400",          },        ],        "label-sm": [          "12px",          {            lineHeight: "16px",            letterSpacing: "0.05em",            fontWeight: "600",          },        ],      },      borderRadius: {        "sm": "0.25rem",        "DEFAULT": "0.5rem",        "md": "0.75rem",        "lg": "1rem",        "xl": "1.5rem",        "full": "9999px",      },      spacing: {        "unit": "8px",        "container-padding": "24px",        "card-gap": "16px",        "section-margin": "40px",        "glass-padding": "20px",      },    },  },};
+
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+NAME : PAWS & PATHS.        <> ---*--- <> 00 <> 00 <> ---*--- <> 00 <> 00 <> 00 --*-- 00 <>
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+
+name : Paws & Paths
+colors:	
+surface surface-dim  surface-bright  surface-container-lowest  surface-container-low    surface-container      	surface-container-high	surface-container-highest	on-surface	on-surface-variant	inverse-surface	inverse-on-surface	outline	outline-variant	surface-tint	primary	on-primary	primary-container	on-primary-container	inverse-primary	secondary	on-secondary	secondary-container	on-secondary-container	tertiary	on-tertiary	tertiary-container	on-tertiary-container	error	on-error	error-container	on-error-container	primary-fixed	primary-fixed-dim	on-primary-fixed	on-primary-fixed-variant	secondary-fixed	secondary-fixed-dim	on-secondary-fixed	on-secondary-fixed-variant	tertiary-fixed	tertiary-fixed-dim	on-tertiary-fixed	on-tertiary-fixed-variant	background	on-background	surface-variant
+#f9f9ff
+#d3daea
+#f9f9ff
+#ffffff
+#f0f3ff
+#e7eefe
+#e2e8f8
+#dce2f3
+#151c27
+#534434
+#2a313d
+#ebf1ff
+#867461
+#d8c3ad
+#855300
+#855300
+#ffffff
+#f59e0b
+#613b00
+#ffb95f
+#0058be
+#ffffff
+#2170e4
+#fefcff
+#00658b
+#ffffff
+#1abdff
+#004966
+#ba1a1a
+#ffffff
+#ffdad6
+#93000a
+#ffddb8
+#ffb95f
+#2a1700
+#653e00
+#d8e2ff
+#adc6ff
+#001a42
+#004395
+#c5e7ff
+#7fd0ff
+#001e2d
+#004c6a
+#f9f9ff
+#151c27
+#dce2f3
+TYPOGRAPHY : <>---^---<>
+display  headline-lg   headline-md   title-lg   body-lg  body-md   label-md   label-sm
+fontFamily  fontSize  fontWeight  lineHeight  letterSpacing
+Plus Jakarta Sans
+44px
+800
+52px
+-0.02em
+fontFamily	fontSize	fontWeight	lineHeight	letterSpacing
+Plus Jakarta Sans
+32px
+700
+40px
+-0.01em
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+24px
+700
+32px
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+20px
+600
+28px
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+18px
+400
+28px
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+16px
+400
+24px
+fontFamily	fontSize	fontWeight	lineHeight	letterSpacing
+Plus Jakarta Sans
+14px
+600
+20px
+0.01em
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+12px
+500
+16px
+rounded	
+sm	DEFAULT	md	lg	xl	full
+0.25rem
+0.5rem
+0.75rem
+1rem
+1.5rem
+9999px
+spacing	
+base	xs	sm	md	lg	xl	gutter	margin
+8px
+4px
+12px
+24px
+40px
+64px
+16px
+24px
+components	
+button-primary	button-primary-hover	button-secondary	button-secondary-hover	card-profile	card-walk-stat	input-field	list-item-walker	list-item-walker-hover	badge-status
+backgroundColor	textColor	typography	rounded	padding
+{colors.primary}
+{colors.on-primary}
+{typography.label-md}
+{rounded.lg}
+{spacing.md}
+backgroundColor	textColor
+{colors.primary-container}
+{colors.on-primary-container}
+backgroundColor	textColor	typography	rounded	padding
+{colors.secondary}
+{colors.on-secondary}
+{typography.label-md}
+{rounded.lg}
+{spacing.md}
+backgroundColor	textColor
+{colors.secondary-container}
+{colors.on-secondary-container}
+backgroundColor	rounded	padding
+{colors.surface-container-lowest}
+{rounded.xl}
+{spacing.md}
+backgroundColor	textColor	rounded	padding
+{colors.secondary-container}
+{colors.on-secondary-container}
+{rounded.md}
+{spacing.sm}
+backgroundColor	textColor	typography	rounded	padding
+{colors.surface-container-low}
+{colors.on-surface}
+{typography.body-md}
+{rounded.DEFAULT}
+{spacing.sm}
+backgroundColor	padding	rounded
+transparent
+{spacing.sm}
+{rounded.md}
+backgroundColor
+{colors.surface-container-high}
+backgroundColor	textColor	typography	rounded	padding
+{colors.tertiary-container}
+{colors.on-tertiary-container}
+{typography.label-sm}
+{rounded.full}
+{spacing.xs}
+Brand & Style
+The design system is built to evoke the joyful energy of a walk in the park balanced with the reliability of a premium professional service. The brand personality is optimistic, trustworthy, and active.
+
+The chosen style is Modern Corporate with a friendly, human-centric twist. It utilizes clean layouts and significant whitespace to reduce cognitive load for busy pet owners. The interface feels light and airy, avoiding heavy borders in favor of soft shadows and tonal shifts to create a welcoming, "best-in-class" digital environment.
+
+Colors
+The palette centers on "Golden Retriever" orange to drive action and signal energy. This is balanced by "Sky Walk" blue, which provides a calming counterpoint for administrative tasks and scheduling.
+
+Primary: Use for main actions, active states, and highlights.
+Secondary: Use for secondary information, trust indicators, and navigation accents.
+Neutral: A range of soft grays used for backgrounds and borders to keep the UI feeling "premium."
+Deep Charcoal: Used for all primary text to ensure high legibility and a grounded, professional feel.
+
+name	Paws & Paths
+colors	
+surface	surface-dim	surface-bright	surface-container-lowest	surface-container-low	surface-container	surface-container-high	surface-container-highest	on-surface	on-surface-variant	inverse-surface	inverse-on-surface	outline	outline-variant	surface-tint	primary	on-primary	primary-container	on-primary-container	inverse-primary	secondary	on-secondary	secondary-container	on-secondary-container	tertiary	on-tertiary	tertiary-container	on-tertiary-container	error	on-error	error-container	on-error-container	primary-fixed	primary-fixed-dim	on-primary-fixed	on-primary-fixed-variant	secondary-fixed	secondary-fixed-dim	on-secondary-fixed	on-secondary-fixed-variant	tertiary-fixed	tertiary-fixed-dim	on-tertiary-fixed	on-tertiary-fixed-variant	background	on-background	surface-variant
+#f9f9ff
+#d3daea
+#f9f9ff
+#ffffff
+#f0f3ff
+#e7eefe
+#e2e8f8
+#dce2f3
+#151c27
+#534434
+#2a313d
+#ebf1ff
+#867461
+#d8c3ad
+#855300
+#855300
+#ffffff
+#f59e0b
+#613b00
+#ffb95f
+#0058be
+#ffffff
+#2170e4
+#fefcff
+#00658b
+#ffffff
+#1abdff
+#004966
+#ba1a1a
+#ffffff
+#ffdad6
+#93000a
+#ffddb8
+#ffb95f
+#2a1700
+#653e00
+#d8e2ff
+#adc6ff
+#001a42
+#004395
+#c5e7ff
+#7fd0ff
+#001e2d
+#004c6a
+#f9f9ff
+#151c27
+#dce2f3
+typography	
+display	headline-lg	headline-md	title-lg	body-lg	body-md	label-md	label-sm
+fontFamily	fontSize	fontWeight	lineHeight	letterSpacing
+Plus Jakarta Sans
+44px
+800
+52px
+-0.02em
+fontFamily	fontSize	fontWeight	lineHeight	letterSpacing
+Plus Jakarta Sans
+32px
+700
+40px
+-0.01em
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+24px
+700
+32px
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+20px
+600
+28px
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+18px
+400
+28px
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+16px
+400
+24px
+fontFamily	fontSize	fontWeight	lineHeight	letterSpacing
+Plus Jakarta Sans
+14px
+600
+20px
+0.01em
+fontFamily	fontSize	fontWeight	lineHeight
+Plus Jakarta Sans
+12px
+500
+16px
+rounded	
+sm	DEFAULT	md	lg	xl	full
+0.25rem
+0.5rem
+0.75rem
+1rem
+1.5rem
+9999px
+spacing	
+base	xs	sm	md	lg	xl	gutter	margin
+8px
+4px
+12px
+24px
+40px
+64px
+16px
+24px
+components	
+button-primary	button-primary-hover	button-secondary	button-secondary-hover	card-profile	card-walk-stat	input-field	list-item-walker	list-item-walker-hover	badge-status
+backgroundColor	textColor	typography	rounded	padding
+{colors.primary}
+{colors.on-primary}
+{typography.label-md}
+{rounded.lg}
+{spacing.md}
+backgroundColor	textColor
+{colors.primary-container}
+{colors.on-primary-container}
+backgroundColor	textColor	typography	rounded	padding
+{colors.secondary}
+{colors.on-secondary}
+{typography.label-md}
+{rounded.lg}
+{spacing.md}
+backgroundColor	textColor
+{colors.secondary-container}
+{colors.on-secondary-container}
+backgroundColor	rounded	padding
+{colors.surface-container-lowest}
+{rounded.xl}
+{spacing.md}
+backgroundColor	textColor	rounded	padding
+{colors.secondary-container}
+{colors.on-secondary-container}
+{rounded.md}
+{spacing.sm}
+backgroundColor	textColor	typography	rounded	padding
+{colors.surface-container-low}
+{colors.on-surface}
+{typography.body-md}
+{rounded.DEFAULT}
+{spacing.sm}
+backgroundColor	padding	rounded
+transparent
+{spacing.sm}
+{rounded.md}
+backgroundColor
+{colors.surface-container-high}
+backgroundColor	textColor	typography	rounded	padding
+{colors.tertiary-container}
+{colors.on-tertiary-container}
+{typography.label-sm}
+{rounded.full}
+{spacing.xs}
+Brand & Style
+The design system is built to evoke the joyful energy of a walk in the park balanced with the reliability of a premium professional service. The brand personality is optimistic, trustworthy, and active.
+
+The chosen style is Modern Corporate with a friendly, human-centric twist. It utilizes clean layouts and significant whitespace to reduce cognitive load for busy pet owners. The interface feels light and airy, avoiding heavy borders in favor of soft shadows and tonal shifts to create a welcoming, "best-in-class" digital environment.
+
+Colors
+The palette centers on "Golden Retriever" orange to drive action and signal energy. This is balanced by "Sky Walk" blue, which provides a calming counterpoint for administrative tasks and scheduling.
+
+Primary: Use for main actions, active states, and highlights.
+Secondary: Use for secondary information, trust indicators, and navigation accents.
+Neutral: A range of soft grays used for backgrounds and borders to keep the UI feeling "premium."
+Deep Charcoal: Used for all primary text to ensure high legibility and a grounded, professional feel.
+
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+WWWWWWWWWWOOOTTTTTTTMMMMMMMMMM <> ---*-><>-*-- TYPOGRAPHY--*-<><-*--- <> WWWWWWWWWWWWWWW)))))))))))))MMMMMMMMMMM
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+This design system utilizes Plus Jakarta Sans for its friendly, rounded terminals and exceptional legibility. It maintains a contemporary look while feeling more approachable than standard geometric sans-serifs.
+
+Headlines: Bold weights are used to create a clear hierarchy and guide the eye quickly to key information.
+Body: Generous line heights are applied to the body text to maintain the "premium and clean" feel.
+Labels: Used for buttons and small metadata, utilizing a medium or semi-bold weight to remain distinct even at small scales.
+Layout & Spacing
+The layout follows a Fixed Grid model for mobile-first consistency, utilizing a 4-column system for handheld devices.
+
+Whitespace: A "generous" philosophy is applied. Never crowd elements; use lg and xl spacing for section vertical separation to maintain a high-end aesthetic.
+Rhythm: Spacing is strictly based on an 8px scale.
+Containers: Content should be centered with a maximum width on larger screens, ensuring the "Paths" (user journeys) feel focused and intentional.
+Elevation & Depth
+This design system uses Ambient Shadows and Tonal Layers to define the interface's verticality.
+
+Surfaces: Main backgrounds use the lightest neutral tint. Interactive cards sit one level above on a pure white surface.
+Shadows: Shadows are highly diffused and soft (Blur: 20px-40px, Opacity: 4-8%) with a subtle hint of the primary orange or secondary blue mixed into the shadow color to prevent a "dirty" gray look.
+Interactions: Elements should subtly lift on hover or tap, increasing shadow spread to provide tactile feedback.
+Shapes
+The shape language is defined by Rounded corners, mirroring the soft features of a pet and making the app feel safe and friendly.
+
+Buttons: Main CTA buttons use a 12px (rounded-lg) radius to feel substantial and clickable.
+Cards: Dog profiles and walker cards use a 1.5rem (rounded-xl) radius to create a soft, containerized look.
+Inputs: Form fields use a 0.5rem radius to maintain a professional yet modern appearance.
+Icons: Icons should feature rounded caps and corners to harmonize with the UI's structural elements.
+Components
+Buttons & Inputs
+Buttons use rounded-lg (12px) to feel substantial and friendly, while form fields use a smaller DEFAULT radius to maintain structural alignment. All interactive states should utilize a subtle 150ms ease-in-out transition for background color shifts.
+
+Cards & Elevation
+The card-profile is the hero container, utilizing rounded-xl and a tinted ambient shadow to create a "lifted" appearance against the surface background. Use card-walk-stat for high-contrast data visualization within the blue secondary palette.
+
+Lists & Navigation
+List items should maintain a wide touch target and use surface-container-high for hover states to provide clear feedback without visual clutter. Use the badge-status for pet availability or walk progress indicators, ensuring the typography remains legible at the smaller scale.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,20 @@
+# Default configuration for Speech-to-Text transcription
+#
+# Override any value via CLI flags or environment variables.
+
+# Batch transcription settings
+batch:
+  model_id: "scribe_v1"
+  language_code: null          # auto-detect
+  diarize: false
+  num_speakers: null           # auto-detect
+  tag_audio_events: false
+  timestamps_granularity: "word"
+
+# Real-time transcription settings
+realtime:
+  model_id: "scribe_v2_realtime"
+  audio_format: "pcm_16000"
+  sample_rate: 16000
+  commit_strategy: "vad"       # "vad" or "manual"
+  language_code: null

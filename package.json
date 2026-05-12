@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.61.3",
+    "@composio/core": "^0.8.1",
     "@sentry/react": "^10.51.0",
+    "@stripe/react-stripe-js": "^6.3.0",
+    "@stripe/stripe-js": "^9.4.0",
     "@tailwindcss/vite": "^4.2.4",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.2",

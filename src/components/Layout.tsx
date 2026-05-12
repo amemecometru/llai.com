@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { useSession, signIn, signOut } from '../lib/auth-client';
 import ThemeToggle from './ThemeToggle';
 import { brand } from '../data/content';
 
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { data: session, isPending } = useSession();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -14,7 +16,7 @@ function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const onLanding = location.pathname === '/';
+  const onLanding = location.pathname === '/' || location.pathname === '/tiles';
 
   return (
     <header
@@ -30,7 +32,28 @@ function Nav() {
           <span className="font-display text-lg font-semibold tracking-tight">{brand.name}</span>
         </Link>
 
+        {/* Desktop Navigation */}
         <div className="hidden items-center gap-8 text-sm font-medium text-ink-soft dark:text-dark-ink-soft md:flex">
+          {session && (
+            <>
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  isActive ? 'text-ink dark:text-dark-ink' : 'hover:text-ink dark:hover:text-dark-ink'
+                }
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/subscribe"
+                className={({ isActive }) =>
+                  isActive ? 'text-ink dark:text-dark-ink' : 'hover:text-ink dark:hover:text-dark-ink'
+                }
+              >
+                Subscribe
+              </NavLink>
+            </>
+          )}
           {onLanding ? (
             <>
               <a href="#workflows" className="hover:text-ink dark:hover:text-dark-ink">Workflows</a>
@@ -57,14 +80,32 @@ function Nav() {
           </NavLink>
         </div>
 
+        {/* Auth / Action Section */}
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <a
-            href="#pricing"
-            className="hidden rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream transition hover:brightness-110 dark:bg-dark-ink dark:text-dark-bg dark:hover:brightness-90 sm:inline-flex"
-          >
-            Start free
-          </a>
+          
+          {isPending ? (
+            <div className="h-8 w-8 animate-pulse rounded-full bg-border dark:bg-dark-border" />
+          ) : session ? (
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-medium text-ink-soft dark:text-dark-ink-soft">
+                {session.user.name?.split(' ')[0]}
+              </span>
+              <button 
+                onClick={() => signOut()}
+                className="rounded-full border border-border px-3 py-1 text-xs font-medium transition-colors hover:bg-cream-deep dark:border-dark-border dark:hover:bg-dark-bg-2"
+              >
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => signIn.social({ provider: "google" })}
+              className="rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream transition hover:brightness-110 dark:bg-dark-ink dark:text-dark-bg"
+            >
+              Sign in
+            </button>
+          )}
         </div>
       </nav>
     </header>
@@ -110,7 +151,8 @@ function Footer() {
           </ul>
         </div>
       </div>
-      <div className="mx-auto mt-16 max-w-8xl border-t border-border px-6 pt-8 text-xs text-slate dark:border-dark-border md:px-10">
+      
+      <div className="mx-auto mt-16 max-w-8xl border-t border-border px-6 pt-8 text-xs text-ink-soft/60 dark:border-dark-border">
         © 2026 {brand.name} AI. All rights reserved. · Built for Google Workspace.
       </div>
     </footer>
@@ -121,7 +163,9 @@ export default function Layout() {
   return (
     <>
       <Nav />
-      <Outlet />
+      <div className="min-h-screen">
+        <Outlet />
+      </div>
       <Footer />
     </>
   );
