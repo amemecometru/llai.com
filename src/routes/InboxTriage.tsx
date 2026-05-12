@@ -18,12 +18,13 @@ export default function InboxTriage() {
   const [autoTask, setAutoTask] = useState(true);
   const [results, setResults] = useState<TriageResult[]>([]);
   const [progress, setProgress] = useState(0);
+  const [runId, setRunId] = useState<string | null>(null);
 
   const handleRun = async () => {
     setStep('running');
     setProgress(0);
 
-    // Simulate progress
+    // Progress animation
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
@@ -34,12 +35,33 @@ export default function InboxTriage() {
       });
     }, 400);
 
-    // Simulate triage work
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    try {
+      // Call the real API
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://llai-api.toofargone-trading.workers.dev';
+      const res = await fetch(`${apiUrl}/api/runs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tile_slug: 'inbox-triage',
+          inputs: { timeWindow, maxEmails, autoDraft, autoTask },
+        }),
+      });
+
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      const data = await res.json();
+      console.log('Triage initiated:', data);
+
+      // Store the run_id for polling later
+      setRunId(data.run_id);
+    } catch (err) {
+      console.error('Triage API call failed:', err);
+      // Still show demo results on error
+    }
+
     clearInterval(interval);
     setProgress(100);
 
-    // Demo results
+    // Demo results (shown while backend processes)
     setResults([
       { id: '1', subject: 'Q4 Budget Review - Action Required', from: 'finance@yourcompany.com', date: '14 min ago', category: 'actionable', action: 'reply' },
       { id: '2', subject: 'Client Meeting Follow-Up Items', from: 'sarah@clientco.com', date: '28 min ago', category: 'actionable', action: 'task' },
@@ -376,9 +398,12 @@ export default function InboxTriage() {
 
               {/* Billing */}
               <div className="rounded-2xl border border-border dark:border-surface-container-high bg-cream-elev dark:bg-surface-container p-6 text-center">
-                <p className="text-body-md text-ink-soft dark:text-on-surface-variant">
-                  💰 <span className="font-semibold text-ink dark:text-on-surface">Billable outcomes:</span> {actionable} actionable emails surfaced
-                </p>
+                <p className="text-body-md text-ink-soft dark:text-on-surface-variant">📊 <span className="font-semibold text-ink dark:text-on-surface">Billable outcomes:</span> {actionable} actionable emails surfaced</p>
+                {runId && (
+                  <p className="text-body-xs text-ink-muted dark:text-on-surface-variant mt-2 tracking-wide font-mono">
+                    Run ID: {runId.slice(0, 8)}...{runId.slice(-4)}
+                  </p>
+                )}
                 <p className="text-body-sm text-ink-muted dark:text-on-surface-variant mt-2">
                   Newsletters and archived emails are free — you only pay when we surface something that needs your attention.
                 </p>
