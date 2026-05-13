@@ -163,6 +163,7 @@ export default function Layout() {
   return (
     <>
       <Nav />
+      <div className="sun-rising" />
       <div className="min-h-screen">
         <Outlet />
       </div>
