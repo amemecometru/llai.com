@@ -2,5 +2,7 @@ node_modules/
 dist/
 .env
 .env.local
-wranngler.toml
+wrangler.toml
+dev_output.log
+verification/
 
